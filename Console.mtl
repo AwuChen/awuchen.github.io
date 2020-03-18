@@ -1,0 +1,34 @@
+newmtl GlowyRed
+Kd 1 0 0
+illum 2
+
+newmtl MiddleScreens
+Kd 1 1 1
+map_Kd null
+illum 2
+
+newmtl console
+Kd 1 1 1
+Ks 0.2 0.2 0.2
+map_Kd null
+map_Bump null
+illum 2
+
+newmtl FarLeft
+Kd 1 1 1
+map_Kd null
+illum 2
+
+newmtl FarRightScreen
+Kd 1 1 1
+map_Kd null
+illum 2
+
+newmtl GlowyGreen
+Kd 0.03448272 1 0
+illum 2
+
+newmtl Default-Material
+Kd 1 1 1
+illum 2
+

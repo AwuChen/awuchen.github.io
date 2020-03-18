@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Ama Old Home</title>
+    <meta name="description" content="Amamento - Ama Old Home">
+    <script src="https://aframe.io/releases/0.7.0/aframe.min.js"></script>
+  </head>
+  <body>
+    <a-scene stats>
+      <a-assets>
+        <img id="boxTexture" src="https://i.imgur.com/mYmmbrp.jpg">
+        <img id="groundTexture" src="https://cdn.aframe.io/a-painter/images/floor.jpg">
+        <img id="skyTexture" src="https://cdn.aframe.io/a-painter/images/sky.jpg">
+        <a-asset-item id="amaOldHome-obj" src="1-25AmaHome.obj"></a-asset-item>
+        <a-asset-item id="amaOldHome-mtl" src="1-25AmaHome.mtl"></a-asset-item>
+      </a-assets>
+      <a-entity id="amaOldHome" obj-model="obj: #amaOldHome-obj; mtl: #amaOldHome-mtl" position="0 4 0" rotation="-90 0 0" scale="1 1 1" >
+      </a-entity>
+      
+      <a-sky height="2048" radius="30" src="#skyTexture" theta-length="90" width="2048"></a-sky>
+      <a-light type="ambient" color="#445451"></a-light>
+      <a-light type="point" intensity="2" position="2 4 4"></a-light>
+      <a-text value="Welcome to Ama Old Home!" color="#BBB" position="-0.9 0.2 -3" scale="1.5 1.5 1.5"></a-text>
+      
+      <a-camera>
+        <a-cursor color="#FAFAFA"></a-cursor>
+      </a-camera>
+    </a-scene>
+  </body>
+</html>
