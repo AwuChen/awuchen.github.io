@@ -1,32 +1,25 @@
 <!DOCTYPE html>
-<html>
+<html lang="en-us">
   <head>
-    <title>Awu Chen</title>
-    <meta name="description" content="Momento - Content">
-    <script src="https://aframe.io/releases/0.7.0/aframe.min.js"></script>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Unity WebGL Player | MonumentWebGL </title>
+    <link rel="shortcut icon" href="TemplateData/favicon.ico">
+    <link rel="stylesheet" href="TemplateData/style.css">
+    <script src="TemplateData/UnityProgress.js"></script>
+    <script src="Build/UnityLoader.js"></script>
     <script>
-
+      var unityInstance = UnityLoader.instantiate("unityContainer", "Build/Build.json", {onProgress: UnityProgress});
     </script>
   </head>
   <body>
-    
-    <a-scene stats fog="color: #241417; near: 0; far: 30;" raycaster="far: 100; objects: [link];" cursor="rayOrigin: mouse" camera-position>
-      <a-assets>
-        <a-asset-item id="console-obj" src="Console.obj"></a-asset-item>
-        <a-asset-item id="console-mtl" src="Console.mtl"></a-asset-item>
-		
-        <img id="planeThumb" src="planeThumb.jpg">
-        <img id="highSpeedRailThumb" src="trainThumb.jpg">
-        <img id="amaOldHomeThumb" src="amaHomeThumb.jpg">
-        
-      </a-assets>
-      <a-entity laser-controls="hand: left"></a-entity>
-	  <a-entity laser-controls="hand: right"></a-entity>
-      <a-entity id="console" obj-model="obj: #console-obj; mtl: #console-mtl"" position="0 0.5 2" scale="0.1 0.1 0.1" rotation="0 -180 0" ></a-entity>                                                                                                                                   
-		<a-link href="plane.html" position="-3.5 1.5 -1.0" image="#planeThumb" title="Plane"></a-link>
-		<a-link href="highSpeedRail.html" position="0 1.5 -1.0" image="#highSpeedRailThumb" title="Train"></a-link>
-		<a-link href="amaOldHome.html" position="3.5 1.5 -1.0" image="#amaOldHomeThumb" title="Ama Old Home"></a-link>
-      <a-sky color="#ECECEC"></a-sky>
-    </a-scene>
+    <div class="webgl-content">
+      <div id="unityContainer" style="width: 960px; height: 600px"></div>
+      <div class="footer">
+        <div class="webgl-logo"></div>
+        <div class="fullscreen" onclick="unityInstance.SetFullscreen(1)"></div>
+        <div class="title">MonumentWebGL </div>
+      </div>
+    </div>
   </body>
 </html>
