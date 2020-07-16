@@ -37,7 +37,7 @@ public class Mopen : MonoBehaviour
         //yield on a new YieldInstruction that waits for 3 seconds.
         yield return new WaitForSeconds(3);
 
-        Application.OpenURL("https://shimo.im/boards/vCHDWBxdV90QDiFR/");
+        Application.OpenURL("https://shimo.im/boards/Vv7dJxrHziYmYUVC/");
         runOnce = true;
     }
 
