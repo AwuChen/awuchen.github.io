@@ -6,6 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/NewEnv.unity
-    guid: cadee58f87faf3f40835d2d7b6e839e6
+    path: Assets/WebGL Multiplayer Online Client/2DShooter/Scenes/2DShooterScene.unity
+    guid: bae34e06520dcbd4a8d2ccef49bebf1e
   m_configObjects: {}

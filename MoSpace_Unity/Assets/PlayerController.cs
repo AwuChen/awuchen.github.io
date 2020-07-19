@@ -155,7 +155,7 @@ public class PlayerController : MonoBehaviour
 
         if (clickedCube.GetComponent<Walkable>().isButton)
         {
-            s.AppendCallback(()=>GameManager.instance.RotateRightPivot());
+            s.AppendCallback(()=>GM.instance.RotateRightPivot());
         }
 
         s.AppendCallback(() => Clear());
