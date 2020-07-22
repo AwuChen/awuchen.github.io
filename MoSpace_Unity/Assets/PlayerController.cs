@@ -61,7 +61,9 @@ public class PlayerController : MonoBehaviour
                     blend = transform.position.y - clickedCube.position.y > 0 ? -1 : 1;
 
                     indicator.position = mouseHit.transform.GetComponent<Walkable>().GetWalkPoint();
-                    networking.setPos(indicator.position.x, indicator.position.y, indicator.position.z);
+                    // Update the player position 
+                    //networking.setPos(indicator.position.x, indicator.position.y, indicator.position.z);
+
                     Sequence s = DOTween.Sequence();
                     s.AppendCallback(() => indicator.GetComponentInChildren<ParticleSystem>().Play());
                     s.Append(indicator.GetComponent<Renderer>().material.DOColor(Color.white, .1f));

@@ -238,15 +238,15 @@ public class NetworkManager : MonoBehaviour {
 
 
 			//spawn camRigPref from Standard Assets\Cameras\Prefabs\MultipurposeCameraRig.prefab
-			camRig = GameObject.Instantiate (camRigPref, new Vector3 (0f, 0f, 0f), Quaternion.identity);
+			//camRig = GameObject.Instantiate (camRigPref, new Vector3 (0f, 0f, 0f), Quaternion.identity);
 
 			//set local player how  being MultipurposeCameraRig target to follow him
-			camRig.GetComponent<CameraFollow> ().SetTarget (myPlayer.transform, newPlayer.cameraTotarget);
+			//camRig.GetComponent<CameraFollow> ().SetTarget (myPlayer.transform, newPlayer.cameraTotarget);
 
-			CanvasManager.instance.healthSlider.value = newPlayer.gameObject.GetComponent<PlayerHealth>().health;
+			//CanvasManager.instance.healthSlider.value = newPlayer.gameObject.GetComponent<PlayerHealth>().health;
 
-			CanvasManager.instance.txtHealth.text = "HP " + newPlayer.gameObject.GetComponent<PlayerHealth>().health + " / " +
-				newPlayer.gameObject.GetComponent<PlayerHealth>().maxHealth;
+			//CanvasManager.instance.txtHealth.text = "HP " + newPlayer.gameObject.GetComponent<PlayerHealth>().health + " / " +
+			//	newPlayer.gameObject.GetComponent<PlayerHealth>().maxHealth;
 			//hide the lobby menu (the input field and join buton)
 			CanvasManager.instance.OpenScreen(1);
 			Debug.Log("player in game");
@@ -375,10 +375,10 @@ public class NetworkManager : MonoBehaviour {
 
 
 			//spawn camRigPref from Standard Assets\Cameras\Prefabs\MultipurposeCameraRig.prefab
-			camRig = GameObject.Instantiate (camRigPref, new Vector3 (0f, 0f, 0f), Quaternion.identity);
+			//camRig = GameObject.Instantiate (camRigPref, new Vector3 (0f, 0f, 0f), Quaternion.identity);
 
 			//set local player how  being MultipurposeCameraRig target to follow him
-			camRig.GetComponent<CameraFollow> ().SetTarget (myPlayer.transform, newPlayer.cameraTotarget);
+			//camRig.GetComponent<CameraFollow> ().SetTarget (myPlayer.transform, newPlayer.cameraTotarget);
 
 			CanvasManager.instance.healthSlider.value = newPlayer.gameObject.GetComponent<PlayerHealth>().health;
 
@@ -443,7 +443,9 @@ public class NetworkManager : MonoBehaviour {
 			{
 				netPlayer.UpdateAnimator ("IsAtack");
 			}
-		}
+
+            Debug.Log("Update Player Pos & Rot");
+        }
 
 
 	}

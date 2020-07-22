@@ -1,208 +1,277 @@
 /*
-*@autor: Rio 3D Studios
-*@description:  java script file that works as master server of the Helicopter WARZONE MMO Game
-*@date: 07/04/2020
+*@autor: Sebastiao Lucio Reis de Souza
+*@description:  java script file that works as master server of the webGL Unity Multiplayer Online Game
+*@data: 08/05/19
 */
-var express = require('express'); //import express NodeJS framework module
-
-var app = express(); // create an object of the express module
-
-var http = require('http').Server(app); // create a http web server using the http library
-
-var io = require('socket.io')(http); // import socketio communication module
-
+var express  = require('express');//import express NodeJS framework module
+var app      = express();// create an object of the express module
+var http     = require('http').Server(app);// create a http web server using the http library
+var io       = require('socket.io')(http);// import socketio communication module
+var shortId 		= require('shortid');//import shortid module
 
 app.use("/public/TemplateData",express.static(__dirname + "/public/TemplateData"));
-
 app.use("/public/Build",express.static(__dirname + "/public/Build"));
-
 app.use(express.static(__dirname+'/public'));
 
-var clientLookup = {};
+var clients			= [];// to storage clients
+var clientLookup = {};// clients search engine
+var sockets = {};//// to storage sockets
+
 
 //open a connection with the specific client
 io.on('connection', function(socket){
 
- console.log('A user ready for connection!');//prints in the  nodeJS console
-
-
-  var current_player;
- 
- //create a callback fuction to listening EmitPing() method in NetworkMannager.cs unity script
-  socket.on("PING",function(pack){
-
-
-   console.log('ping');
-
-  socket.emit("PONG");
-
-
-});//END_SOCKET.ON
-
-//create a callback fuction to listening EmitJoin() method in NetworkMannager.cs unity script
-socket.on("JOIN_ROOM",function(_data){
-
-  var pack = JSON.parse(_data);
-  // fills out with the information emitted by the player in the unity
-  current_player = {
-
-    name : pack.name,
-    id: socket.id,
-	avatar: pack.avatar,
-	dx:pack.dx,
-	rotation:'r',
-	health:100,
-	maxHealth:100,
-	isDead:false
+   //print a log in node.js command prompt
+  console.log('A user ready for connection!');
+  
+  //to store current client connection
+  var currentUser;
 	
-  };
-  
-  console.log("[INFO] player " + current_player.id + ": logged!");
-  
-  clientLookup[current_player.id] = current_player;
-  
-  console.log ("[INFO] Total players: " + Object.keys(clientLookup).length);
-
-  socket.emit("JOIN_SUCCESS",current_player.id,current_player.name,current_player.avatar);
-  
-  // spawn current_player client on clients in broadcast
-  socket.broadcast.emit('SPAWN_PLAYER',current_player.id,current_player.name,current_player.avatar,current_player.dx);
-
-   //spawn all connected clients for current_player client 
-  for(client in clientLookup)
-  {
-    if(clientLookup[client].id!=current_player.id)
-    {
-      socket.emit('SPAWN_PLAYER',clientLookup[client].id,clientLookup[client].name,clientLookup[client].avatar,clientLookup[client].dx);
-    }
-  }
-  
-});//END_SOCKET.ON
-
-
-socket.on("RESPAW",function(_data){
-
-   var pack = JSON.parse(_data);
-   
-  console.log("receive respaw");
-  
-  if(current_player)
-  {
-	  current_player.isDead = false;
-	  current_player.health = current_player.maxHealth;
-	  current_player.avatar = pack.avatar;
-	  current_player.dx = pack.dx;
-		 
-	  socket.emit("JOIN_SUCCESS",current_player.id,current_player.name,current_player.avatar);
-  
-      socket.broadcast.emit('SPAWN_PLAYER',current_player.id,current_player.name,current_player.avatar,current_player.dx);
-
-      for(client in clientLookup)
-      {
-         if(clientLookup[client].id!=current_player.id)
-         {
-           socket.emit('SPAWN_PLAYER',clientLookup[client].id,clientLookup[client].name,clientLookup[client].avatar,clientLookup[client].dx);
-      }
-    }
-	}
-		  
-		
-  
-});//END_SOCKET.ON
-
- 
-socket.on("POS_AND_ROT",function(_data){
-
- var pack = JSON.parse(_data);
-  
- clientLookup[current_player.id].dx = pack.dx;
- 
- clientLookup[current_player.id].rotation = pack.rotation;
- 
- var data = {
-   id:current_player.id,
-   dx:pack.dx,
-   rotation:pack.rotation
- };
-
- socket.broadcast.emit('UPDATE_POS_AND_ROT',data.id,data.dx,data.rotation);
-
-});//END_SOCKET.ON
-
-socket.on("JUMP",function(_data){
- 
- var pack = JSON.parse(_data);
- var data = {
-   id:current_player.id,
-   
- };
-
- socket.broadcast.emit('UPDATE_JUMP',data.id);
- 
- console.log("player jump");
-
-});//END_SOCKET.ON
-
-socket.on('ANIMATION',function(_data){
-
-   var pack = JSON.parse(_data);
-  socket.broadcast.emit('UPDATE_ANIMATOR',current_player.id,pack.animation);
-
-});//END_SOCKET.ON
-
-socket.on('DAMAGE',function(_data){
-
-    var pack = JSON.parse(_data);
-   var target = clientLookup[pack.id];
-   
-   var _damage = 10;
-   
-   if(target.health - _damage > 0)
-   {
-			   
-	 target.health -=_damage;
-	 
-  }
-  
-   else
-  {
-      console.log("game over for: "+target.name);
-      socket.emit('GAME_OVER',target.id);
-	  
-	  socket.broadcast.emit('GAME_OVER',target.id);
-			   
-  }
-  
-  socket.emit("UPDATE_PLAYER_DAMAGE",target.id,target.health);	   
-
-	   socket.broadcast.emit("UPDATE_PLAYER_DAMAGE",target.id,target.health);
-
-		
-
-});//END_SOCKET.ON
-
-socket.on('disconnect', function ()
+	
+	//create a callback fuction to listening EmitPing() method in NetworkMannager.cs unity script
+	socket.on('PING', function (pack)
 	{
-        console.log("User  has disconnected");
-	    
-	      if(current_player)
-		    {
-		       current_player.isDead = true;
-		       socket.broadcast.emit('USER_DISCONNECTED', current_player.id);
+	  //console.log('_pack# '+_pack);
+	  //var pack = JSON.parse(_pack);	
 
+	    console.log('message from user# '+socket.id+": "+pack.msg);
+        
+		 //emit back to NetworkManager in Unity by client.js script
+		socket.emit('PONG', socket.id,pack.msg);
+     
+	});
+	
+	//create a callback fuction to listening EmitJoin() method in NetworkMannager.cs unity script
+	socket.on('LOGIN', function (_data)
+	{
+	
+	    console.log('[INFO] JOIN received !!! ');
+		
+		var data = JSON.parse(_data);
 
-		       delete clientLookup[current_player.id];
-		     
-		      
-        }
-    });//END_SOCKET.ON
+         // fills out with the information emitted by the player in the unity
+        currentUser = {
+			       name:data.name,
+                   position:data.position,
+				   rotation:'0,0,0,0',
+			       id:shortId.generate(),//alternatively we could use socket.id
+				   socketID:socket.id,//fills out with the id of the socket that was open
+				   animation:"",
+				   health:100,
+			       maxHealth:100,
+			       kills:0,
+				   timeOut:0,
+				   isDead:false
+				   };//new user  in clients list
+					
+		console.log('[INFO] player '+currentUser.name+': logged!');
+		console.log('[INFO] currentUser.position '+currentUser.position);	
 
+		 //add currentUser in clients list
+		 clients.push(currentUser);
+		 
+		 //add client in search engine
+		 clientLookup[currentUser.id] = currentUser;
+		 
+		 console.log('[INFO] Total players: ' + clients.length);
 
+		 
+		 /*********************************************************************************************/		
+		
+		//send to the client.js script
+		socket.emit("LOGIN_SUCCESS",currentUser.id,currentUser.name,currentUser.position,currentUser.rotation);//emite para o metodo NetworkController.OnLoginSuccess(SocketIOEvent _myPlayer)
+		
+         //spawn all connected clients for currentUser client 
+         clients.forEach( function(i) {
+		    if(i.id!=currentUser.id)
+			{
+		     // console.log('[INFO] generate ' + i.name+ ' connected!');
+				 
+		      //send to the client.js script
+		      socket.emit('SPAWN_PLAYER',i.id,i.name,i.position,i.rotation);
+		    }//END_IF
+	   
+	     });//end_forEach
+		
+		 // spawn currentUser client on clients in broadcast
+		socket.broadcast.emit('SPAWN_PLAYER',currentUser.id,currentUser.name,currentUser.position,currentUser.rotation);
+  
+	});//END_SOCKET_ON
+	
+	
+	
+    //create a callback fuction to listening method in NetworkMannager.cs unity script
+	socket.on('RESPAW', function (_info) {
+	
+	    var info = JSON.parse(_info);	  
+		
+	    if(currentUser)
+		{
+	
+			currentUser.isDead = false;
+		
+		    currentUser.health = currentUser.maxHealth;
+			 
+		    socket.emit('RESPAW_PLAYER',currentUser.id,currentUser.name,currentUser.position,currentUser.rotation);
+			 
+		    socket.broadcast.emit('SPAWN_PLAYER',currentUser.id,currentUser.name,currentUser.position,currentUser.rotation);
+			 
+	        console.log('[INFO] User ' + currentUser.name + ' respawned!');
+			
+		}
+       
+    });//END_SOCKET_ON
+	
+		
+	//create a callback fuction to listening EmitMoveAndRotate() method in NetworkMannager.cs unity script
+	socket.on('MOVE_AND_ROTATE', function (_data)
+	{
+    console.log('[INFO] User POS UPDATED' + currentUser.position + ' Updated!');
+	  var data = JSON.parse(_data);	
+	  
+	  if(currentUser)
+	  {
+	
+       currentUser.position = data.position;
+	   
+	   currentUser.rotation = data.rotation;
+	  
+	   // send current user position and  rotation in broadcast to all clients in game
+       socket.broadcast.emit('UPDATE_MOVE_AND_ROTATE', currentUser.id,currentUser.position,currentUser.rotation);
+      
+       }
+	});//END_SOCKET_ON
+	
+	
+	//create a callback fuction to listening EmitAnimation() method in NetworkMannager.cs unity script
+	socket.on('ANIMATION', function (_data)
+	{
+	  var data = JSON.parse(_data);	
+	  if(currentUser)
+	  {
+	   
+	   currentUser.timeOut = 0;
+	   
+	    //send to the client.js script
+	   //updates the animation of the player for the other game clients
+       socket.broadcast.emit('UPDATE_PLAYER_ANIMATOR', currentUser.id,data.animation);
+	   
+      }//END_IF
+	  
+	});//END_SOCKET_ON
+	
+
+	//create a callback fuction to listening EmitAnimation() method in NetworkMannager.cs unity script
+	socket.on('ATACK', function (_data)
+	{
+	  var data = JSON.parse(_data);	
+	  
+	  if(currentUser)
+	  {
+	   
+        socket.broadcast.emit('UPDATE_ATACK', currentUser.id);
+      }
+	  
+	});//END_SOCKET_ON
+	
+
+	//create a callback fuction to listening EmitPhisicstDamage method in NetworkMannager.cs unity script
+	socket.on('PHISICS_DAMAGE', function (_data)
+	{
+	  var data = JSON.parse(_data);	
+      if(currentUser)
+	  {
+      
+	  
+	   var target = clientLookup[data.targetId];
+	 
+	   var _damage = 1;
+	   
+	   // if health target is not empty
+	   if(target.health - _damage > 0)
+	    {
+		   console.log("player: "+target.name+"receive damage from : "+currentUser.name);
+		   
+		   console.log(target.name+"health: "+ target.health);
+		   
+		   target.health -=_damage;//decrease target health
+		}
+	  
+	   else{
+	  
+	  
+        if(!target.isDead)
+        {				
+			   
+		 target.isDead = true;//target is dead
+		 
+		 target.kills = 0;
+		 
+		 //console.log("currentuser"+currentUser.name+" kills: "+currentUser.kills);
+		 
+		 currentUser.kills +=1;
+		
+		 jo_pack = {
+				shooterId:currentUser.id,
+		        targetId:data.targetId
+		 };
+	 
+	     //emit only for the currentUser
+		 socket.emit('DEATH',jo_pack.targetId);
+		 
+		 //emit to all connected clients in broadcast
+		 socket.broadcast.emit('DEATH',jo_pack.targetId);
+		
+	    }//END_ if    
+    }//END_ELSE
+		  
+	damage_pack = {
+		 
+		       name:target.name,
+				shooterId:currentUser.id,
+				targetId:data.targetId,
+				targetHealth:target.health
+		 }
+	
+	  
+	   socket.broadcast.emit("UPDATE_PHISICS_DAMAGE",damage_pack.shooterId,damage_pack.targetId,damage_pack.targetHealth);
+			   
+	}//END_IF
+	  
+	});//END_SOCKET_ON
+	
+
+    // called when the user desconnect
+	socket.on('disconnect', function ()
+	{
+     
+	    if(currentUser)
+		{
+		 currentUser.isDead = true;
+		 
+		 //send to the client.js script
+		 //updates the currentUser disconnection for all players in game
+		 socket.broadcast.emit('USER_DISCONNECTED', currentUser.id);
+		
+		
+		 for (var i = 0; i < clients.length; i++)
+		 {
+			if (clients[i].name == currentUser.name && clients[i].id == currentUser.id) 
+			{
+
+				console.log("User "+clients[i].name+" has disconnected");
+				clients.splice(i,1);
+
+			};
+		};
+		
+		}
+    });//END_SOCKET_ON
+		
 });//END_IO.ON
 
 
 http.listen(process.env.PORT ||3000, function(){
 	console.log('listening on *:3000');
 });
-
-console.log('------- NodeJS server is running -------');
+console.log("------- server is running -------");

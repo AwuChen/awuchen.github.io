@@ -8,7 +8,7 @@ public class GM : MonoBehaviour
 {
     public static GM instance;
 
-    public PlayerController player;
+    public PlayerManager player;
     public List<PathCondition> pathConditions = new List<PathCondition>();
     public List<Transform> pivots;
 
@@ -35,8 +35,8 @@ public class GM : MonoBehaviour
                 sp.block.possiblePaths[sp.index].active = (count == pc.conditions.Count);
         }
 
-        if (player.walking)
-            return;
+        //if (player.walking)
+        //    return;
 
         if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.LeftArrow))
         {
