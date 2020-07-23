@@ -29,10 +29,10 @@ io.on('connection', function(socket){
 	
 	
 	//create a callback fuction to listening EmitPing() method in NetworkMannager.cs unity script
-	socket.on('PING', function (pack)
+	socket.on('PING', function (_pack)
 	{
 	  //console.log('_pack# '+_pack);
-	  //var pack = JSON.parse(_pack);	
+	    var pack = JSON.parse(_pack);	
 
 	    console.log('message from user# '+socket.id+": "+pack.msg);
         
@@ -126,7 +126,9 @@ io.on('connection', function(socket){
 	//create a callback fuction to listening EmitMoveAndRotate() method in NetworkMannager.cs unity script
 	socket.on('MOVE_AND_ROTATE', function (_data)
 	{
+     console.log('[INFO] MOVE_AND_ROTATE reached'); 
     console.log('[INFO] User POS UPDATED' + currentUser.position + ' Updated!');
+
 	  var data = JSON.parse(_data);	
 	  
 	  if(currentUser)
@@ -138,7 +140,7 @@ io.on('connection', function(socket){
 	  
 	   // send current user position and  rotation in broadcast to all clients in game
        socket.broadcast.emit('UPDATE_MOVE_AND_ROTATE', currentUser.id,currentUser.position,currentUser.rotation);
-      
+      console.log('[INFO] currentUser.position '+currentUser.position);
        }
 	});//END_SOCKET_ON
 	

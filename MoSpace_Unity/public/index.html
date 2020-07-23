@@ -8,12 +8,8 @@
     <link rel="stylesheet" href="TemplateData/style.css">
     <script src="TemplateData/UnityProgress.js"></script>
     <script src="Build/UnityLoader.js"></script>
-    
-        <script src="/socket.io/socket.io.js"></script>
-  <script src="client.js"></script>
-
     <script>
-      var gameInstance = UnityLoader.instantiate("unityContainer", "Build/public.json", {onProgress: UnityProgress});
+      var unityInstance = UnityLoader.instantiate("unityContainer", "Build/public.json", {onProgress: UnityProgress});
     </script>
   </head>
   <body>

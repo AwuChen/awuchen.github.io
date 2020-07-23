@@ -227,7 +227,8 @@ MonoBehaviour:
   walking: 0
   currentCube: {fileID: 0}
   clickedCube: {fileID: 0}
-  indicator: {fileID: 0}
+  indicator: {fileID: 6152965195856746205, guid: cd484ae3bcfd11847bc57da47e21d650,
+    type: 3}
   finalPath: []
 --- !u!114 &9003777249090748541
 MonoBehaviour:

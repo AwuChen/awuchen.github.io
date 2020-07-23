@@ -121,7 +121,7 @@ public class NetworkManager : MonoBehaviour {
 		JSONObject jo = new JSONObject (data);
 
 		//sends to the nodejs server through socket the json package
-		Application.ExternalCall("socket.emit", "PING",new JSONObject(data));
+		Application.ExternalCall("socket.emit", "PING", new JSONObject(data));
 
 
 	}
@@ -399,8 +399,7 @@ public class NetworkManager : MonoBehaviour {
 
 		//sends to the nodejs server through socket the json package
 		Application.ExternalCall("socket.emit", "MOVE_AND_ROTATE",new JSONObject(data));
-
-	}
+    }
 
 
 

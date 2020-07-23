@@ -242,6 +242,9 @@ public class PlayerManager : MonoBehaviour {
         }
         finalPath.Clear();
         walking = false;
+        Debug.Log("Right before Update Status to Server");
+        UpdateStatusToServer();
+        Debug.Log("Right after Update Status to Server");
     }
 
     private void OnDrawGizmos()
@@ -301,7 +304,6 @@ public class PlayerManager : MonoBehaviour {
 
 	void Move( )
 	{
-
         //// read inputs
         ////float  h = CrossPlatformInputManager.GetAxis ("Horizontal");
         ////float  v = CrossPlatformInputManager.GetAxis ("Vertical");
@@ -331,15 +333,18 @@ public class PlayerManager : MonoBehaviour {
         //}
 
 
-        //if (move || isJumping) {
-        //	currentState = state.walk;
-        //	UpdateAnimator ("IsWalk");
-        //	UpdateStatusToServer ();
+        //if (move || isJumping)
+        //{
+        //    //currentState = state.walk;
+        //    //UpdateAnimator("IsWalk");
+        //    Debug.Log("Right before Update Status to Server");
+        //    UpdateStatusToServer();
+        //    Debug.Log("Right after Update Status to Server");
         //}
         //else
         //{
-        //	currentState = state.idle;
-        //	UpdateAnimator ("IsIdle");
+        //    //currentState = state.idle;
+        //    //UpdateAnimator("IsIdle");
         //}
 
         //GET CURRENT CUBE (UNDER PLAYER)
@@ -369,22 +374,16 @@ public class PlayerManager : MonoBehaviour {
                     DOTween.Kill(gameObject.transform);
                     finalPath.Clear();
                     FindPath();
-
                     blend = transform.position.y - clickedCube.position.y > 0 ? -1 : 1;
-
-                    indicator.position = mouseHit.transform.GetComponent<Walkable>().GetWalkPoint();
-                    // Update the player position 
-                    //networking.setPos(indicator.position.x, indicator.position.y, indicator.position.z);
-                    currentState = state.walk;
-                    //	UpdateAnimator ("IsWalk");
-                    UpdateStatusToServer();
-
+                    Transform indicatorC;
+                    indicatorC = GameObject.Instantiate(indicator);
+                    indicatorC.position = mouseHit.transform.GetComponent<Walkable>().GetWalkPoint();
                     Sequence s = DOTween.Sequence();
-                    s.AppendCallback(() => indicator.GetComponentInChildren<ParticleSystem>().Play());
-                    s.Append(indicator.GetComponent<Renderer>().material.DOColor(Color.white, .1f));
-                    s.Append(indicator.GetComponent<Renderer>().material.DOColor(Color.black, .3f).SetDelay(.2f));
-                    s.Append(indicator.GetComponent<Renderer>().material.DOColor(Color.clear, .3f));
-
+                    s.AppendCallback(() => indicatorC.GetComponentInChildren<ParticleSystem>().Play());
+                    s.Append(indicatorC.GetComponent<Renderer>().material.DOColor(Color.white, .1f));
+                    s.Append(indicatorC.GetComponent<Renderer>().material.DOColor(Color.black, .3f).SetDelay(.2f));
+                    s.Append(indicatorC.GetComponent<Renderer>().material.DOColor(Color.clear, .3f));
+                    Destroy(((indicatorC as Transform).gameObject), 1);
                 }
                
             }
@@ -398,10 +397,14 @@ public class PlayerManager : MonoBehaviour {
 
 	void UpdateStatusToServer ()
 	{
+        Debug.Log("Right at the start of Update Status to Server");
 
-
-		//hash table <key, value>
-		Dictionary<string, string> data = new Dictionary<string, string>();
+        if(NetworkManager.instance == null)
+        {
+            Debug.Log("NetworkManager is null");
+        }
+        //hash table <key, value>
+        Dictionary<string, string> data = new Dictionary<string, string>();
 
 		data["local_player_id"] = id;
 
@@ -413,9 +416,9 @@ public class PlayerManager : MonoBehaviour {
 
 		NetworkManager.instance.EmitMoveAndRotate(data);//call method NetworkSocketIO.EmitPosition for transmit new  player position to all clients in game
         print("updatedPos");
+        Debug.Log("Right at the end of Update Status to Server");
 
-
-	}
+    }
 
 
 	public void UpdateIdle()
