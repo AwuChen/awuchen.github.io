@@ -71,12 +71,20 @@ public class PlayerManager : MonoBehaviour {
 
     private float blend;
 
+    public SkinnedMeshRenderer[] playerMR;
 
     void Start()
     {
         RayCastDown();
+        if (isLocalPlayer)
+        {
+            gameObject.tag = "LocalPlayer";
+        }
+        else
+        {
+            gameObject.tag = "NetworkPlayer";
+        }
     }
-
     // Use this for initialization
     void Awake () {
 
@@ -385,7 +393,7 @@ public class PlayerManager : MonoBehaviour {
                     s.Append(indicatorC.GetComponent<Renderer>().material.DOColor(Color.clear, .3f));
                     Destroy(((indicatorC as Transform).gameObject), 1);
                 }
-               
+                //else if (mouseHit.transform.GetComponent<Walkable>(). != null)
             }
         }
         else
@@ -446,13 +454,13 @@ public class PlayerManager : MonoBehaviour {
 
 	public void UpdateRotation(Quaternion _rotation)
 	{
-		//if (!isLocalPlayer)
-		//{
-		//	transform.rotation = _rotation;
+        if (!isLocalPlayer)
+        {
+            transform.rotation = _rotation;
 
-		//}
+        }
 
-	}
+    }
 
 
 
@@ -550,4 +558,12 @@ public class PlayerManager : MonoBehaviour {
 		//}
 
 	}
+
+    public void HidePlayer(bool hide)
+    {
+        for (int i = 0; i < playerMR.Length; i++)
+        {
+            playerMR[i].enabled = !hide;
+        }
+    }
 }

@@ -126,8 +126,7 @@ io.on('connection', function(socket){
 	//create a callback fuction to listening EmitMoveAndRotate() method in NetworkMannager.cs unity script
 	socket.on('MOVE_AND_ROTATE', function (_data)
 	{
-     console.log('[INFO] MOVE_AND_ROTATE reached'); 
-    console.log('[INFO] User POS UPDATED' + currentUser.position + ' Updated!');
+     
 
 	  var data = JSON.parse(_data);	
 	  
