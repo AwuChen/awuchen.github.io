@@ -1,25 +1,65 @@
-<!DOCTYPE html>
-<html lang="en-us">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Unity WebGL Player | MoSpace</title>
-    <link rel="shortcut icon" href="TemplateData/favicon.ico">
-    <link rel="stylesheet" href="TemplateData/style.css">
-    <script src="TemplateData/UnityProgress.js"></script>
-    <script src="Build/UnityLoader.js"></script>
-    <script>
-      var unityInstance = UnityLoader.instantiate("unityContainer", "Build/Build.json", {onProgress: UnityProgress});
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="description" content="An online memorial for our loved ones">
+  <meta name="keywords" content="Online Memorial Space">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta property="og:title" content="MoSpace" />
+  <meta property="og:description" content="Virtual memorial for our loved ones." />
+  <meta property="og:image" content="MoSpace.jpg" />
+
+  <title>Awu Chen</title>
+
+  <link href="styles_general.css" rel="stylesheet">
+  <link href="styles_index.css" rel="stylesheet">
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="icon" href="favicon.png">
+</head>
+
+<body>
+  <div id="navbkgrd">
+    <nav>
+      <a href="index.html"><img id="logo" src="logo.png"></a>
+      <ul>
+        <li><a href="story.html">Story</a></li>
+        <li><a href="ralston.html">Experience</a></li>
+      </ul>
+    </nav>
+  </div>
+
+  <main>
+    <h1>A <span id="highlight">memorial </span><br>for our loved ones.</h1>
+    <h3>I attended my friend's online memorial service earlier this year. As I watched the event unfold, I realized that there was no place, no time, and no one to cry with.</h3>
+
+    <form onsubmit="Submit(); confirmation();">
+      <input id="email" type="text" placeholder="Your email address" required>
+      <input type="submit" value="Learn More">
+    </form>
+
+    <!-- feature -->
+    <!-- description (put under image if mobile?)-->
+    <!-- image (or 3d object?) -->
+  </main>
+
+  <footer>
+  </footer>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+      var socket = io("wss://ancient-beyond-09960.herokuapp.com");
+    function Submit()
+        {
+          email = document.getElementById("email").value;
+          console.log(email);
+
+          err = socket.emit('EMAIL', email);
+          console.log(err)
+        }
     </script>
-  </head>
-  <body>
-    <div class="webgl-content">
-      <div id="unityContainer" style="width: 960px; height: 600px"></div>
-      <div class="footer">
-        <div class="webgl-logo"></div>
-        <div class="fullscreen" onclick="unityInstance.SetFullscreen(1)"></div>
-        <div class="title">MoSpace</div>
-      </div>
-    </div>
-  </body>
+  <script src="scripts_general.js"></script>
+  <script src="scripts_index.js"></script>
+</body>
 </html>
