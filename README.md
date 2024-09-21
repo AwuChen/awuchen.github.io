@@ -1,47 +1,27 @@
-# Linktree Template
-### Presentation
-Hi there. How are you? Hope you're fine. 😁
+# React Graph Viz
+This project shows how to use [2d-force-graph react components](https://github.com/vasturiano/react-force-graph) with a [Neo4j Database](https://neo4j.com/developer).
 
-In this repository, I would like to make available a website template for people who wants to share your's most important links in any social media. It's very customizable, so you are able to make any changes that you wants.
+A Cypher query from a textarea is used to query the database.
+The results are then rendered as graph visualization.
 
-If necessary, feel free for ask or suggest me about anything. Intend to monitor this repository every day.
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## 🎯 Website demo
-![Website Demo](https://github.com/vitor-antoni/linktree-template/blob/main/assets/gif-readme/gif-readme.gif)
+## Available Scripts
 
+In the project directory, you can run:
 
-## 💻 Somethings you can do
-The `index.html` can imports two differents snowfall effects, but you must choose between one of these. 
-> Don't use both at the same time, it might seem a little strange.
+### `yarn start`
 
-If you want to keep default effect, don't change the lines where are this code:
-```
-<!-- Snowfall Background Animation -->
-<section class="animated-background">
-    <div id="stars1"></div>
-    <div id="stars2"></div>
-    <div id="stars3"></div>
-</section>
-<!-- End of Snowfall Background Animation -->
-```
+Runs the app in the development mode.<br />
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-But, if you want, comment this code above. After commenting the code above, go to the end of `index.html`, you may see a code code like that: 
-```
-<!-- 
-A different snowfall 
-<script  src="snowfall.js"></script> 
--->
-```
-Uncomment this code and press `ctrl+s` for see the updates in your website.
+The page will reload if you make edits.<br />
+You will also see any lint errors in the console.
 
-## 📑 Additional Information
-This project was developed to contribute to the *open source* movement. Therefore, it doesn't have any complex code here.
+### `yarn build`
 
-I liked this project so much that I used it to develop a website for myself. You can see it [clicking here](https://links.vitor-antoni.com.br).
+Builds the app for production to the `build` folder.<br />
+It correctly bundles React in production mode and optimizes the build for the best performance.
+Your app is ready to be deployed!
 
-Furthermore, I must to give the credit to these people, that I got some pieces of code from their own projects to develop this.
-
-[©️ johnggli](https://github.com/johnggli/linktree) <br>
-[©️ SamirPaul1](https://github.com/SamirPaul1/links)
-
-In case you are interested to follow or conected with me on LinkedIn, you can do it in this link: [LinkedIn](linkedin.com/in/vitor-silva-de-antoni/)
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
