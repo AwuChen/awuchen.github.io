@@ -11,6 +11,7 @@
                 top: 0;
                 left: 50%;
                 transform: translateX(-200px);
+                opacity: 85%;
         }
     }
   </style>
@@ -45,14 +46,14 @@
         const ids = new Set()
         links.forEach(l => {ids.add(l.source);ids.add(l.target);});
         const gData = { nodes: Array.from(ids).map(id => {return {id}}), links: links}
-        const Graph = ForceGraph3D()(document.getElementById('craftnetwork_div')).graphData(gData);
+        const Graph = ForceGraph3D()(document.getElementById('3d-graph')).graphData(gData);
       })
       .catch(function (error) {
         console.log(error);
       });
   </script>
 
-<div class="min-h-full flex-h-center" id="craftnetwork_div"></div>
+<div id="3d-graph"></div>
 
 <div class="min-h-full flex-h-center box stack-top" id="background_div">
             <input type="hidden" value="https://bio.link" id="app-url">
