@@ -1,32 +1,62 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <link href="assets/css/style.css" rel="stylesheet">
-        <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0'>
-        <link rel="shortcut icon" href="assets/images/favicon.png" type="image/webp">
-        <link rel="apple-touch-icon" sizes="180x180" href="images/favicon.png">
-        <link rel="icon" href="assets/images/favicon.png" type="image/webp">
-        <title>Awu Chen</title>
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
-    </head>
-    <body>
-        <!-- Snowfall Background Animation -->
-        <section class="animated-background">
-            <div id="stars1"></div>
-            <div id="stars2"></div>
-            <div id="stars3"></div>
-        </section>
-        <!-- End of Snowfall Background Animation -->
+<head>
+  <style> 
+    body { margin: 0; } 
+    .stack-top{z-index: 9;} 
+    .box{
+        width: 100px;
+        height: 100px;            
+        position: absolute;
+        top: 0;
+        left: 50%;
+        margin-left: -350px;
+        opacity: 0.8;  /* for demo purpose  */
+    }
+  </style>
 
-        <div class="min-h-full flex-h-center" id="background_div">
+  <script src="//unpkg.com/3d-force-graph"></script>
+  <script src="https://unpkg.com/neo4j-driver"></script>
+  <!--<script src="../../dist/3d-force-graph.js"></script>-->
+
+  <meta charset="utf-8">
+  <link href="assets/css/style.css" rel="stylesheet">
+  <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0'>
+  <link rel="shortcut icon" href="assets/images/favicon.png" type="image/webp">
+  <link rel="apple-touch-icon" sizes="180x180" href="images/favicon.png">
+  <link rel="icon" href="assets/images/favicon.png" type="image/webp">
+  <title>Awu Chen</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+  <script>
+    const driver = neo4j.driver("bolt://demo.neo4jlabs.com", neo4j.auth.basic("gameofthrones", "gameofthrones"),{encrypted: true});
+  const session = driver.session({database:"gameofthrones"});
+  const start = new Date()
+    session
+      .run('MATCH (n)-->(m) RETURN id(n) as source, id(m) as target LIMIT $limit', {limit: neo4j.int(5000)})
+      .then(function (result) {
+        const links = result.records.map(r => { return {source:r.get('source').toNumber(), target:r.get('target').toNumber()}});        
+        session.close();
+        console.log(links.length+" links loaded in "+(new Date()-start)+" ms.")
+        const ids = new Set()
+        links.forEach(l => {ids.add(l.source);ids.add(l.target);});
+        const gData = { nodes: Array.from(ids).map(id => {return {id}}), links: links}
+        const Graph = ForceGraph3D()(document.getElementById('craftnetwork_div')).graphData(gData);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  </script>
+<div class="min-h-full flex-h-center" id="craftnetwork_div"></div>
+  <div class="box stack-top" id="background_div">
             <input type="hidden" value="https://bio.link" id="app-url">
                 <input type="hidden" value="null" id="is-featured">
-                    <canvas id="bg-canvas" class="background-overlay"></canvas>
+                    <canvas id="bg-canvas" ></canvas>
                 </input>
             </input>
 
-            <div class="mt-48 page-full-wrap relative ">
+            <div class="mt-48 page-full-wrap relative">
                 <input type="hidden" value="creator-page" id="page-type">
                 <img class="display-image m-auto" data-src="assets/images/awu.png" src="assets/images/awu.png" alt=""/>
                 <h2 class="page-title page-text-color page-text-font mt-16 text-center">Awu Chen</h2>
@@ -85,10 +115,6 @@
                 </div>                                                                                
             </div>
         </div>
-    </body>
 
-    <!--
-    A different snowfall    
-    <script  src="assets/js/snowfall.js"></script>
-    -->
-</html>
+  
+</body>
