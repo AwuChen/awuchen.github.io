@@ -1,14 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <style> 
     body { margin: 0; } 
-    .stack-top{z-index: 9;} 
+    .stack-top{ z-index: 9;} 
     .box{
-                width: 700px;
+                width: 400px;
                 height: 900px;            
                 position: fixed;
                 top: 0;
                 left: 50%;
-                transform: translateX(-350px);
+                transform: translateX(-200px);
         }
     }
   </style>
@@ -23,16 +25,17 @@
   <link rel="shortcut icon" href="assets/images/favicon.png" type="image/webp">
   <link rel="apple-touch-icon" sizes="180x180" href="images/favicon.png">
   <link rel="icon" href="assets/images/favicon.png" type="image/webp">
-  <title>Awu Chen</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
 
+  <title>Awu Chen</title>
 </head>
 
 <body>
+
   <script>
     const driver = neo4j.driver("bolt://demo.neo4jlabs.com", neo4j.auth.basic("gameofthrones", "gameofthrones"),{encrypted: true});
-  const session = driver.session({database:"gameofthrones"});
-  const start = new Date()
+    const session = driver.session({database:"gameofthrones"});
+    const start = new Date()
     session
       .run('MATCH (n)-->(m) RETURN id(n) as source, id(m) as target LIMIT $limit', {limit: neo4j.int(5000)})
       .then(function (result) {
@@ -48,8 +51,10 @@
         console.log(error);
       });
   </script>
+
 <div class="min-h-full flex-h-center" id="craftnetwork_div"></div>
-  <div class="box stack-top id="background_div">
+
+<div class="min-h-full flex-h-center box stack-top" id="background_div">
             <input type="hidden" value="https://bio.link" id="app-url">
                 <input type="hidden" value="null" id="is-featured">
                     <canvas id="bg-canvas" class="background-overlay"></canvas>
@@ -118,3 +123,5 @@
 
   
 </body>
+
+</html>
