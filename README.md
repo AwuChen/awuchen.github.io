@@ -1,5 +1,4 @@
 # Awu's Portfolio
-### Presentation
 Thank you for checking out my portfolio!
 
 
