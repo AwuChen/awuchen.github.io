@@ -5,30 +5,30 @@
     body { margin: 0; } 
     .stack-top{ z-index: 9;} 
     .box{
-                width: 400px;
-                height: 900px;            
-                position: fixed;
-                top: 0;
-                left: 50%;
-                transform: translateX(-200px);
-                opacity: 85%;
-        }
+        width: 400px;
+        height: 900px;            
+        position: fixed;
+        top: 0;
+        left: 50%;
+        transform: translateX(-200px);
+        opacity: 85%;
     }
-  </style>
+}
+</style>
 
-  <script src="//unpkg.com/3d-force-graph"></script>
-  <script src="https://unpkg.com/neo4j-driver"></script>
-  <!--<script src="../../dist/3d-force-graph.js"></script>-->
+<script src="//unpkg.com/3d-force-graph"></script>
+<script src="https://unpkg.com/neo4j-driver"></script>
+<!--<script src="../../dist/3d-force-graph.js"></script>-->
 
-  <meta charset="utf-8">
-  <link href="assets/css/style.css" rel="stylesheet">
-  <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0'>
-  <link rel="shortcut icon" href="assets/images/favicon.png" type="image/webp">
-  <link rel="apple-touch-icon" sizes="180x180" href="images/favicon.png">
-  <link rel="icon" href="assets/images/favicon.png" type="image/webp">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<meta charset="utf-8">
+<link href="assets/css/style.css" rel="stylesheet">
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0'>
+<link rel="shortcut icon" href="assets/images/favicon.png" type="image/webp">
+<link rel="apple-touch-icon" sizes="180x180" href="images/favicon.png">
+<link rel="icon" href="assets/images/favicon.png" type="image/webp">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
 
-  <title>Awu Chen</title>
+<title>Awu Chen</title>
 </head>
 
 <body>
@@ -38,84 +38,85 @@
     const session = driver.session({database:"gameofthrones"});
     const start = new Date()
     session
-      .run('MATCH (n)-->(m) RETURN id(n) as source, id(m) as target LIMIT $limit', {limit: neo4j.int(5000)})
-      .then(function (result) {
+    .run('MATCH (n)-->(m) RETURN id(n) as source, id(m) as target LIMIT $limit', {limit: neo4j.int(5000)})
+    .then(function (result) {
         const links = result.records.map(r => { return {source:r.get('source').toNumber(), target:r.get('target').toNumber()}});        
         session.close();
         console.log(links.length+" links loaded in "+(new Date()-start)+" ms.")
         const ids = new Set()
         links.forEach(l => {ids.add(l.source);ids.add(l.target);});
         const gData = { nodes: Array.from(ids).map(id => {return {id}}), links: links}
-        const Graph = ForceGraph3D()(document.getElementById('3d-graph')).graphData(gData);
-      })
-      .catch(function (error) {
+        const Graph = ForceGraph3D()(document.getElementById('3d-graph')).graphData(gData).cameraPosition({ z: 900 });
+    })
+
+    .catch(function (error) {
         console.log(error);
-      });
-  </script>
+    });
+</script>
 
 <div id="3d-graph"></div>
 
 <div class="min-h-full flex-h-center box stack-top" id="background_div">
-            <input type="hidden" value="https://bio.link" id="app-url">
-                <input type="hidden" value="null" id="is-featured">
-                    <canvas id="bg-canvas" class="background-overlay"></canvas>
-                </input>
-            </input>
+    <input type="hidden" value="https://bio.link" id="app-url">
+    <input type="hidden" value="null" id="is-featured">
+    <canvas id="bg-canvas" class="background-overlay"></canvas>
+</input>
+</input>
 
-            <div class="mt-48 page-full-wrap relative">
-                <input type="hidden" value="creator-page" id="page-type">
-                <img class="display-image m-auto" data-src="assets/images/awu.png" src="assets/images/awu.png" alt=""/>
-                <h2 class="page-title page-text-color page-text-font mt-16 text-center">Awu Chen</h2>
-                       
-                <div class="mt-24">
-                                
-                    <div class="page-item-wrap relative">
-                        <div class="page-item flex-both-center absolute"></div>
-                        <a target="_blank"  class="page-item-each py-10 flex-both-center" href="https://soooul.xyz" data-id="261685" data-type="page_item">
-                            <img class="link-each-image" data-src="assets/images/soooul.png" src="assets/images/soooul.png" alt="SOOOUL @ [User]"/>
-                            <span class=" item-title text-center">Kyoto Startup @SOOOUL</span>
-                        </a>
-                    </div>
-                    <div class="page-item-wrap relative">
-                        <div class="page-item flex-both-center absolute"></div>
-                        <a target="_blank"  class="page-item-each py-10 flex-both-center" href="https://hako.soooul.xyz" data-id="261685" data-type="page_item">
-                            <img class="link-each-image" data-src="assets/images/hako.png" src="assets/images/hako.png" alt="HAKO @ [User]"/>
-                            <span class=" item-title text-center">Craft Marketplace @HAKO</span>
-                        </a>
-                    </div>
-                    <div class="page-item-wrap relative">
-                        <div class="page-item flex-both-center absolute"></div>
-                        <a target="_blank"  class="page-item-each py-10 flex-both-center" href="https://amavr.com/" data-id="261685" data-type="page_item">
-                            <img class="link-each-image" data-src="assets/images/amavr.png" src="assets/images/amavr.png" alt="VR Projects @AMAVR"/>
-                            <span class=" item-title text-center">VR Projects @AMAVR</span>
-                        </a>
-                    </div> 
-                    <div class="page-item-wrap relative">
-                        <div class="page-item flex-both-center absolute"></div>
-                        <a target="_blank"  class="page-item-each py-10 flex-both-center" href="https://medium.com/@awuchen" data-id="261685" data-type="page_item">
-                            <img class="link-each-image" data-src="assets/images/medium.png" src="assets/images/medium.png" alt="Replit @awuchen"/>
-                            <span class=" item-title text-center">Medium @awuchen</span>
-                        </a>
-                    </div> 
-                    <div class="page-item-wrap relative">
-                        <div class="page-item flex-both-center absolute"></div>
-                        <a target="_blank"  class="page-item-each py-10 flex-both-center" href="https://www.linkedin.com/in/awuchen/" data-id="261652" data-type="page_item">
-                            <img class="link-each-image" data-src="assets/images/linkedin.png" src="assets/images/linkedin.png" alt="LinkedIn @awuchen"/>
-                            <span class=" item-title text-center">LinkedIn @awuchen</span>
-                        </a>
-                    </div>        
-                    <div class="page-item-wrap relative">
-                        <div class="page-item flex-both-center absolute"></div>
-                        <a target="_blank"  class="page-item-each py-10 flex-both-center" href="https://github.com/AwuChen" data-id="261685" data-type="page_item">
-                            <img class="link-each-image" data-src="assets/images/github.png" src="assets/images/github.png" alt="GitHub @awuchen"/>
-                            <span class=" item-title text-center">GitHub @awuchen</span>
-                        </a>
-                    </div> 
-                </div>                                                                                
-            </div>
+<div class="mt-48 page-full-wrap relative">
+    <input type="hidden" value="creator-page" id="page-type">
+    <img class="display-image m-auto" data-src="assets/images/awu.png" src="assets/images/awu.png" alt=""/>
+    <h2 class="page-title page-text-color page-text-font mt-16 text-center">Awu Chen</h2>
+
+    <div class="mt-24">
+
+        <div class="page-item-wrap relative">
+            <div class="page-item flex-both-center absolute"></div>
+            <a target="_blank"  class="page-item-each py-10 flex-both-center" href="https://soooul.xyz" data-id="261685" data-type="page_item">
+                <img class="link-each-image" data-src="assets/images/soooul.png" src="assets/images/soooul.png" alt="SOOOUL @ [User]"/>
+                <span class=" item-title text-center">Kyoto Startup @SOOOUL</span>
+            </a>
         </div>
+        <div class="page-item-wrap relative">
+            <div class="page-item flex-both-center absolute"></div>
+            <a target="_blank"  class="page-item-each py-10 flex-both-center" href="https://hako.soooul.xyz" data-id="261685" data-type="page_item">
+                <img class="link-each-image" data-src="assets/images/hako.png" src="assets/images/hako.png" alt="HAKO @ [User]"/>
+                <span class=" item-title text-center">Craft Marketplace @HAKO</span>
+            </a>
+        </div>
+        <div class="page-item-wrap relative">
+            <div class="page-item flex-both-center absolute"></div>
+            <a target="_blank"  class="page-item-each py-10 flex-both-center" href="https://amavr.com/" data-id="261685" data-type="page_item">
+                <img class="link-each-image" data-src="assets/images/amavr.png" src="assets/images/amavr.png" alt="VR Projects @AMAVR"/>
+                <span class=" item-title text-center">VR Projects @AMAVR</span>
+            </a>
+        </div> 
+        <div class="page-item-wrap relative">
+            <div class="page-item flex-both-center absolute"></div>
+            <a target="_blank"  class="page-item-each py-10 flex-both-center" href="https://medium.com/@awuchen" data-id="261685" data-type="page_item">
+                <img class="link-each-image" data-src="assets/images/medium.png" src="assets/images/medium.png" alt="Replit @awuchen"/>
+                <span class=" item-title text-center">Medium @awuchen</span>
+            </a>
+        </div> 
+        <div class="page-item-wrap relative">
+            <div class="page-item flex-both-center absolute"></div>
+            <a target="_blank"  class="page-item-each py-10 flex-both-center" href="https://www.linkedin.com/in/awuchen/" data-id="261652" data-type="page_item">
+                <img class="link-each-image" data-src="assets/images/linkedin.png" src="assets/images/linkedin.png" alt="LinkedIn @awuchen"/>
+                <span class=" item-title text-center">LinkedIn @awuchen</span>
+            </a>
+        </div>        
+        <div class="page-item-wrap relative">
+            <div class="page-item flex-both-center absolute"></div>
+            <a target="_blank"  class="page-item-each py-10 flex-both-center" href="https://github.com/AwuChen" data-id="261685" data-type="page_item">
+                <img class="link-each-image" data-src="assets/images/github.png" src="assets/images/github.png" alt="GitHub @awuchen"/>
+                <span class=" item-title text-center">GitHub @awuchen</span>
+            </a>
+        </div> 
+    </div>                                                                                
+</div>
+</div>
 
-  
+
 </body>
 
 </html>
