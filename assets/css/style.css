@@ -3,7 +3,6 @@ body,html{
     overscroll-behavior:none;
     margin:0;
     padding:0;
-    background-color: #191d2b;
 }
 
 @-webkit-keyframes slidetounlock{

@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
   <style> 
-    body { margin: 0; } 
+    body { margin: 0} 
     .stack-top{ z-index: 9;} 
     .box{
         width: 400px;
-        height: 900px;            
+        height: 0px;            
         position: fixed;
         top: 0;
         left: 50%;
@@ -46,7 +46,7 @@
         const ids = new Set()
         links.forEach(l => {ids.add(l.source);ids.add(l.target);});
         const gData = { nodes: Array.from(ids).map(id => {return {id}}), links: links}
-        const Graph = ForceGraph3D()(document.getElementById('3d-graph')).graphData(gData).cameraPosition({ z: 900 });
+        const Graph = ForceGraph3D()(document.getElementById('3d-graph')).graphData(gData).cameraPosition({ z: 900 }).backgroundColor('#191d2b');
     })
 
     .catch(function (error) {
@@ -56,7 +56,7 @@
 
 <div id="3d-graph"></div>
 
-<div class="min-h-full flex-h-center box stack-top" id="background_div">
+<div class="flex-h-center box stack-top" id="background_div">
     <input type="hidden" value="https://bio.link" id="app-url">
     <input type="hidden" value="null" id="is-featured">
     <canvas id="bg-canvas" class="background-overlay"></canvas>
