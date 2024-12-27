@@ -1,12 +1,9 @@
 # Awu's Portfolio
-Thank you for checking out my portfolio!
+Thank you for checking out my portfolio
 
 
 ## 📑 Additional Information
-This project was developed to contribute to the *open source* movement. Therefore, it doesn't have any complex code here.
+This portfolio was developed on top of [johnggli](https://github.com/johnggli/linktree) (Linktree).
+The dynamic background is rendered from my [Craft-Network-3D](https://github.com/AwuChen/craft-network-3d) (ThreeJS/WebGL)
 
-Furthermore, I must to give the credit to these people, that I got some pieces of code from their own projects to develop this.
 
-[©️ johnggli](https://github.com/johnggli/linktree) <br>
-[©️ SamirPaul1](https://github.com/SamirPaul1/links)
-[LinkedIn](linkedin.com/in/vitor-silva-de-antoni/)
