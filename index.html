@@ -17,7 +17,7 @@
 }
 </style>
 
-<script src="//unpkg.com/3d-force-graph"></script>
+<script src="https://cdn.jsdelivr.net/npm/3d-force-graph"></script>
 <script src="https://unpkg.com/neo4j-driver"></script>
 <!--<script src="../../dist/3d-force-graph.js"></script>-->
 
@@ -35,13 +35,22 @@
 <body>
 
   <script>
-    const driver = neo4j.driver("bolt://demo.neo4jlabs.com", neo4j.auth.basic("gameofthrones", "gameofthrones"),{encrypted: true});
-    const session = driver.session({database:"gameofthrones"});
-    const start = new Date()
+    const driver = neo4j.driver("neo4j+s://7714be1a.databases.neo4j.io", neo4j.auth.basic("neo4j", "lwW-hWpruNTNNrD-gCAMreXMZcUlAFcrjxmaeL94ZzM"));
+    const session = driver.session({ database: "neo4j" });
+ const start = new Date();
     session
-    .run('MATCH (n)-->(m) RETURN id(n) as source, id(m) as target LIMIT $limit', {limit: neo4j.int(5000)})
-    .then(function (result) {
-        const links = result.records.map(r => { return {source:r.get('source').toNumber(), target:r.get('target').toNumber()}});        
+   .run(
+     'MATCH (u:User)-[r:CONNECTED_TO]->(v:User) RETURN u.name AS source, v.name AS target LIMIT $limit', 
+     { limit: neo4j.int(5000) }
+   )
+   .then(function (result) {
+     console.log(result.records.map(r => r.toObject())); // Debugging output
+ 
+     // No need for .toNumber() since names are strings
+     const links = result.records.map(r => ({ 
+       source: r.get('source'), 
+       target: r.get('target')  
+     }));     
         session.close();
         console.log(links.length+" links loaded in "+(new Date()-start)+" ms.")
         const ids = new Set()
