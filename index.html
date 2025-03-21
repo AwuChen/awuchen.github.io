@@ -56,7 +56,7 @@
         const ids = new Set()
         links.forEach(l => {ids.add(l.source);ids.add(l.target);});
         const gData = { nodes: Array.from(ids).map(id => {return {id}}), links: links}
-        const Graph = ForceGraph3D()(document.getElementById('3d-graph')).graphData(gData).cameraPosition({ z: 900 }).backgroundColor('#000011');
+        const Graph = ForceGraph3D()(document.getElementById('3d-graph')).graphData(gData).cameraPosition({ z: 400 }).backgroundColor('#000011');
     })
 
     .catch(function (error) {
