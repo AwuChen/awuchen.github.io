@@ -18,7 +18,6 @@
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/3d-force-graph"></script>
-<script src="https://unpkg.com/neo4j-driver"></script>
 <!--<script src="../../dist/3d-force-graph.js"></script>-->
 
 <meta charset="utf-8">
@@ -35,34 +34,45 @@
 <body>
 
   <script>
-    const driver = neo4j.driver("neo4j+s://7714be1a.databases.neo4j.io", neo4j.auth.basic("neo4j", "lwW-hWpruNTNNrD-gCAMreXMZcUlAFcrjxmaeL94ZzM"));
-    const session = driver.session({ database: "neo4j" });
- const start = new Date();
-    session
-   .run(
-     'MATCH (u:User)-[r:CONNECTED_TO]->(v:User) RETURN u.name AS source, v.name AS target LIMIT $limit', 
-     { limit: neo4j.int(5000) }
-   )
-   .then(function (result) {
-     console.log(result.records.map(r => r.toObject())); // Debugging output
- 
-     // No need for .toNumber() since names are strings
-     const links = result.records.map(r => ({ 
-       source: r.get('source'), 
-       target: r.get('target')  
-     }));     
-        session.close();
-        console.log(links.length+" links loaded in "+(new Date()-start)+" ms.")
-        const ids = new Set()
-        links.forEach(l => {ids.add(l.source);ids.add(l.target);});
-        const gData = { nodes: Array.from(ids).map(id => {return {id}}), links: links}
-        const Graph = ForceGraph3D()(document.getElementById('3d-graph')).graphData(gData).cameraPosition({ z: 600 }).backgroundColor('#000011');
-    })
+    const DATA_SOURCES = [
+      'graph-data.json',
+      'https://awuchen.github.io/craft-network/graph-data.json',
+      'https://awuchen.github.io/craft-network-3d/graph-data.json',
+    ];
 
-    .catch(function (error) {
-        console.log(error);
-    });
-</script>
+    async function loadGraphData() {
+      let lastError = null;
+      for (const source of DATA_SOURCES) {
+        try {
+          const response = await fetch(source, { cache: 'no-cache' });
+          if (!response.ok) throw new Error(`${source} returned ${response.status}`);
+          const payload = await response.json();
+          if (!payload.nodes || !payload.links) throw new Error(`${source} missing nodes/links`);
+          return payload;
+        } catch (error) {
+          lastError = error;
+          console.warn('Graph data source failed:', source, error);
+        }
+      }
+      throw lastError || new Error('No graph data sources available');
+    }
+
+    function renderGraph(payload) {
+      const start = new Date();
+      const gData = { nodes: payload.nodes, links: payload.links };
+      ForceGraph3D()(document.getElementById('3d-graph'))
+        .graphData(gData)
+        .cameraPosition({ z: 600 })
+        .backgroundColor('#000011');
+      console.log(gData.links.length + ' links loaded in ' + (new Date() - start) + ' ms.');
+    }
+
+    loadGraphData()
+      .then(renderGraph)
+      .catch(function (error) {
+        console.warn('Could not load Craft Network background graph:', error);
+      });
+  </script>
 
 <div id="3d-graph"></div>
 
