@@ -57,14 +57,23 @@
       throw lastError || new Error('No graph data sources available');
     }
 
+    function sanitizeGraph(payload) {
+      const nodes = (payload.nodes || []).filter((n) => n && n.id);
+      const nodeIds = new Set(nodes.map((n) => n.id));
+      const links = (payload.links || []).filter(
+        (l) => l && l.source && l.target && nodeIds.has(l.source) && nodeIds.has(l.target)
+      );
+      return { nodes, links };
+    }
+
     function renderGraph(payload) {
       const start = new Date();
-      const gData = { nodes: payload.nodes, links: payload.links };
+      const gData = sanitizeGraph(payload);
       ForceGraph3D()(document.getElementById('3d-graph'))
         .graphData(gData)
         .cameraPosition({ z: 600 })
         .backgroundColor('#000011');
-      console.log(gData.links.length + ' links loaded in ' + (new Date() - start) + ' ms.');
+      console.log('Loaded ' + gData.nodes.length + ' nodes, ' + gData.links.length + ' links in ' + (new Date() - start) + ' ms.');
     }
 
     loadGraphData()
